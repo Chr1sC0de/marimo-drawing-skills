@@ -1,0 +1,4 @@
+interface:
+  display_name: "Diagrams"
+  short_description: "Build architecture diagrams as Python code"
+  default_prompt: "Use $diagrams to create a Python architecture diagram for a web service."

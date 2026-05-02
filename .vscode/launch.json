@@ -1,0 +1,64 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Marimo: edit current file",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "marimo",
+      "args": [
+        "edit",
+        "${file}",
+        "--host",
+        "127.0.0.1",
+        "--skip-update-check",
+        "--watch"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Marimo: run current file",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "marimo",
+      "args": [
+        "run",
+        "${file}",
+        "--host",
+        "127.0.0.1",
+        "--watch"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    },
+    {
+      "name": "Marimo: edit starter notebook",
+      "type": "debugpy",
+      "request": "launch",
+      "module": "marimo",
+      "args": [
+        "edit",
+        "${workspaceFolder}/notebooks/starter.py",
+        "--host",
+        "127.0.0.1",
+        "--skip-update-check",
+        "--watch"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      }
+    }
+  ]
+}

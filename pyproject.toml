@@ -1,0 +1,10 @@
+[project]
+name = "diagrams-skill"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "diagrams>=0.25.1",
+    "marimo>=0.23.4",
+]
