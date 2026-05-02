@@ -92,25 +92,6 @@ wheels = [
 ]
 
 [[package]]
-name = "diagrams-skill"
-version = "0.1.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "diagrams" },
-    { name = "marimo" },
-    { name = "pycairo" },
-    { name = "watchdog" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "diagrams", specifier = ">=0.25.1" },
-    { name = "marimo", specifier = ">=0.23.4" },
-    { name = "pycairo", specifier = ">=1.29.0" },
-    { name = "watchdog", specifier = ">=6.0.0" },
-]
-
-[[package]]
 name = "distlib"
 version = "0.4.0"
 source = { registry = "https://pypi.org/simple" }
@@ -263,6 +244,25 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/99/1a/79f8fc2af1be74283ba3b701cba77472ec4f30949ffa88a3166d4bb7e751/marimo-0.23.4.tar.gz", hash = "sha256:8e5f1bd78a73cb04d775e650473cfab745303be746f141a3654dcd246de2a4e6", size = 38403567, upload-time = "2026-04-28T18:01:51.14Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/8f/13/c1c3d0f889115ad33e2122efd16c842f8588aab7e0d243f29125a0ee8ad5/marimo-0.23.4-py3-none-any.whl", hash = "sha256:67806cf1dc4f438624e4640debf80e0689173399b8ee17de7f879cb07f6fb476", size = 38824790, upload-time = "2026-04-28T18:01:47.909Z" },
+]
+
+[[package]]
+name = "marimo-drawing-skill"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "diagrams" },
+    { name = "marimo" },
+    { name = "pycairo" },
+    { name = "watchdog" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "diagrams", specifier = ">=0.25.1" },
+    { name = "marimo", specifier = ">=0.23.4" },
+    { name = "pycairo", specifier = ">=1.29.0" },
+    { name = "watchdog", specifier = ">=6.0.0" },
 ]
 
 [[package]]

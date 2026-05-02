@@ -1,4 +1,4 @@
 interface:
-  display_name: "Diagrams"
-  short_description: "Build architecture diagrams as Python code"
-  default_prompt: "Use $diagrams to create a Python architecture diagram for a web service."
+  display_name: "Marimo Drawing"
+  short_description: "Render diagrams and custom drawings in marimo notebooks"
+  default_prompt: "Use $marimo-drawing to create a marimo notebook drawing that renders an architecture diagram."

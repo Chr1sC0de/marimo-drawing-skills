@@ -1,27 +1,35 @@
-# Diagrams Skill
+# Marimo Drawing Skill
 
-This context defines the language for a Codex skill that helps users create, render, and display architecture diagrams from Python code.
+This context defines the language for a Codex skill that helps users create, render, and display drawings in marimo notebooks.
 
 ## Language
 
-**Diagrams skill**:
-A Codex skill that guides agents in creating and troubleshooting architecture diagrams.
-_Avoid_: skills package, diagrams library
+**Marimo drawing skill**:
+A Codex skill that guides agents in creating and troubleshooting rendered drawing workflows in marimo notebooks.
+_Avoid_: Diagrams skill, generic diagrams skill
 
 **diagrams**:
-The Python library used to define and render architecture diagrams as code.
-_Avoid_: skills, Diagrams skill
+The default Python backend for architecture diagrams as code.
+_Avoid_: skills, Marimo drawing skill, pycairo
 
 **pycairo**:
 The Python binding for cairo used when custom drawing needs lower-level control than diagrams provides.
 _Avoid_: diagrams replacement, default drawing tool
 
+**drawing backend**:
+A Python library used by a drawing module to produce a rendered artifact.
+_Avoid_: drawing skill, notebook
+
 **marimo auto-rendering**:
-A marimo notebook pattern where a cell runs diagram code, writes an image artifact to a notebook-local output directory, and displays it with `mo.image`.
+A marimo notebook pattern where a cell runs drawing code, writes an image artifact to a notebook-local output directory, and displays it with `mo.image`.
 _Avoid_: automatic rendering, live rendering
 
+**drawing module**:
+An importable Python module that owns backend-specific drawing construction, rendering options, and output path creation.
+_Avoid_: inline drawing cell
+
 **diagram module**:
-An importable Python module that owns diagram construction, rendering options, and output path creation.
+A drawing module that uses diagrams for architecture diagrams.
 _Avoid_: inline diagram cell
 
 **output stem**:
@@ -48,8 +56,8 @@ _Avoid_: subprocess rendering, shell rendering
 A verification and execution convention where the agent prepends notebook module directories to `PYTHONPATH` before running marimo.
 _Avoid_: notebook sys.path mutation
 
-**marimo reference**:
-The Diagrams skill reference document that explains direct import rendering for marimo notebooks.
+**marimo drawing reference**:
+A Marimo drawing skill reference document that explains one drawing backend or rendering pattern.
 _Avoid_: separate marimo skill
 
 **custom drawing path**:
@@ -70,26 +78,30 @@ _Avoid_: install notes only
 
 ## Relationships
 
-- The **Diagrams skill** teaches agents how to use **diagrams**.
+- The **Marimo drawing skill** teaches agents how to use **drawing backends** from marimo notebooks.
 - **diagrams** is the default drawing tool for architecture diagrams.
 - **pycairo** supports the **custom drawing path** when architecture diagrams need more manual control.
-- **marimo auto-rendering** embeds **diagrams** output in a notebook workflow.
+- **marimo auto-rendering** embeds **rendered artifacts** in a notebook workflow.
+- A **drawing module** uses a **drawing backend** to create a **rendered artifact**.
 - A **diagram module** is called by a marimo notebook during **marimo auto-rendering**.
 - A **diagram module** accepts an **output stem** and returns the final image path.
 - **marimo auto-rendering** creates **rendered artifacts** under a notebook-local output directory.
 - A **diagram module** exposes a **build_diagram function** for marimo notebooks to call.
-- A pycairo drawing module exposes a **draw_surface function** for marimo notebooks to call.
+- A pycairo **drawing module** exposes a **draw_surface function** for marimo notebooks to call.
 - **direct import rendering** is the default pattern for **marimo auto-rendering**.
 - **CLI import path setup** keeps marimo notebooks focused on rendering rather than import bootstrapping.
-- The **marimo reference** extends the **Diagrams skill** rather than creating a separate skill.
+- A **marimo drawing reference** extends the **Marimo drawing skill** rather than creating a separate skill.
 - The **pycairo marimo slide** demonstrates the **custom drawing path** by running pycairo code.
 - The **pycairo marimo slide** produces a **pycairo artifact** by default.
 - A **pycairo environment check** verifies both the Python binding and the native cairo runtime.
 
 ## Example Dialogue
 
-> **Dev:** "Should the Diagrams skill tell agents to import from `skills`?"
-> **Domain expert:** "No. The skill is named Diagrams, but the Python library is `diagrams`; `skills` refers to the Codex skill context."
+> **Dev:** "Is this a generic diagrams skill?"
+> **Domain expert:** "No. It is a marimo drawing skill; diagrams is the default backend for architecture diagrams."
+
+> **Dev:** "Should the Marimo drawing skill tell agents to import from `skills`?"
+> **Domain expert:** "No. The Python architecture diagram backend is `diagrams`; `skills` refers to the Codex skill context."
 
 > **Dev:** "Should I put all of the diagram code directly in the marimo cell?"
 > **Domain expert:** "No. Put diagram construction in a diagram module and keep the marimo cell focused on rendering and display."
@@ -110,7 +122,7 @@ _Avoid_: install notes only
 > **Domain expert:** "No. The agent should prepend the notebook module directory to `PYTHONPATH` from the CLI before running or exporting."
 
 > **Dev:** "Should marimo rendering be its own Codex skill?"
-> **Domain expert:** "No. Add a marimo reference to the existing Diagrams skill because it is a usage pattern for diagrams."
+> **Domain expert:** "No. Keep diagrams and pycairo as references inside the Marimo drawing skill."
 
 > **Dev:** "Should pycairo replace diagrams as the recommended drawing tool?"
 > **Domain expert:** "No. Use diagrams by default; use pycairo as the custom drawing path when lower-level drawing control is needed."
@@ -129,4 +141,5 @@ _Avoid_: install notes only
 
 ## Flagged Ambiguities
 
-- "skills" was used to mean both the **Diagrams skill** and the **diagrams** Python library; resolved: use **Diagrams skill** for the Codex skill and **diagrams** for the Python package.
+- "skills" was used to mean both the **Marimo drawing skill** and the **diagrams** Python library; resolved: use **Marimo drawing skill** for the Codex skill and **diagrams** for the Python package.
+- "Diagrams skill" understated the scope; resolved: the skill assists with drawing in marimo notebooks, with **diagrams** as the default architecture diagram backend and **pycairo** as a custom drawing backend.

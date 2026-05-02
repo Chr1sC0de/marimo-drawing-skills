@@ -1,4 +1,4 @@
-# Marimo Auto-Render Pattern
+# Diagrams Backend For Marimo
 
 Use this reference when a marimo notebook should render a `diagrams` diagram and display the generated image automatically.
 

@@ -1,4 +1,4 @@
-# Pycairo Marimo Pattern
+# Pycairo Backend For Marimo
 
 Use this reference when a marimo notebook needs lower-level custom drawing than the `diagrams` library provides.
 
