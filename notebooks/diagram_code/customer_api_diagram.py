@@ -2,11 +2,10 @@ from __future__ import annotations
 
 from pathlib import Path, PurePath
 
-from skills.aws.compute import ECS
-from skills.aws.database import RDS
-from skills.aws.network import ELB, Route53
-
-from skills import Cluster, Diagram, Edge
+from diagrams import Cluster, Diagram, Edge
+from diagrams.aws.compute import ECS
+from diagrams.aws.database import RDS
+from diagrams.aws.network import ELB, Route53
 
 GRAPH_ATTRIBUTES = {
     "bgcolor": "transparent",
@@ -24,8 +23,15 @@ def build_diagram(
     graph_attributes: dict[str, str] | None = None,
 ) -> Path:
     output_stem_path = Path(output_stem)
+    if output_stem_path.suffix:
+        raise ValueError(
+            "output_stem must not include a file extension; set outformat instead."
+        )
+
     output_stem_path.parent.mkdir(parents=True, exist_ok=True)
-    graph_attributes = graph_attributes or GRAPH_ATTRIBUTES
+    graph_attributes = (
+        GRAPH_ATTRIBUTES if graph_attributes is None else graph_attributes
+    )
 
     with Diagram(
         title or "Architecture Diagram",

@@ -1,13 +1,13 @@
 ---
-name: skills
-description: "Create, edit, and troubleshoot Python architecture skills with the mingrammer/skills library. Use when Codex needs to generate diagram-as-code scripts, render cloud/system architecture diagrams, select provider node classes, use Diagram/Cluster/Edge patterns, or debug Graphviz and diagrams rendering issues."
+name: diagrams
+description: "Create, edit, and troubleshoot Python architecture diagrams with the mingrammer/diagrams library. Use when Codex needs to generate diagram-as-code scripts, render cloud/system architecture diagrams, select provider node classes, use Diagram/Cluster/Edge patterns, debug Graphviz rendering issues, or embed rendered diagrams in marimo notebooks."
 ---
 
 # Diagrams
 
 ## Overview
 
-Use the `skills` Python library to create architecture diagrams as code. The library renders through Graphviz and is best for cloud, Kubernetes, on-prem, SaaS, C4, generic infrastructure, and programming-framework diagrams.
+Use the `diagrams` Python library to create architecture diagrams as code. The library renders through Graphviz and is best for cloud, Kubernetes, on-prem, SaaS, C4, generic infrastructure, and programming-framework diagrams.
 
 ## Workflow
 
@@ -22,22 +22,23 @@ python skills/scripts/check_diagrams_env.py
 
 ```bash
 python skills/scripts/list_diagrams_nodes.py --provider aws --query lambda
-python skills/scripts/list_skills_nodes.py --provider k8s --category compute
+python skills/scripts/list_diagrams_nodes.py --provider k8s --category compute
 ```
 
 4. Write a normal Python script near the requested output. Use `show=False`, an explicit `filename` without an extension, and the requested `outformat` (`png`, `jpg`, `svg`, `pdf`, or `dot`).
-5. Render by running the diagram script or the `skills` CLI, then verify that the expected output file exists and is non-empty.
-6. If rendering fails, use the troubleshooting section in [library-guide.md](references/library-guide.md).
+5. For marimo notebooks, put diagram construction in an importable module and call a `build_diagram(output_stem) -> Path` function from the notebook; read [marimo-auto-render.md](references/marimo-auto-render.md) for the full pattern.
+6. Render by running the diagram script, then verify that the expected output file exists and is non-empty.
+7. If rendering fails, use the troubleshooting section in [library-guide.md](references/library-guide.md).
 
 ## Coding Pattern
 
 Prefer readable variables and explicit imports. Assign nodes once and connect the variables; repeated constructor calls create repeated diagram nodes.
 
 ```python
-from skills import Cluster, Diagram, Edge
-from skills.aws.compute import ECS
-from skills.aws.database import RDS
-from skills.aws.network import ELB, Route53
+from diagrams import Cluster, Diagram, Edge
+from diagrams.aws.compute import ECS
+from diagrams.aws.database import RDS
+from diagrams.aws.network import ELB, Route53
 
 graph_attr = {
     "fontsize": "18",
@@ -72,10 +73,12 @@ with Diagram(
 - Use `Edge(label=..., color=..., style=...)` sparingly for important protocols, trust boundaries, or asynchronous flows.
 - Use list fanout for replicas or parallel consumers: `lb >> [ECS("api-1"), ECS("api-2")]`.
 - Parenthesize mixed `-`, `>>`, and `<<` expressions when chaining undirected and directed edges.
-- Prefer `svg` for version-controlled skills and `png` for documents or chat previews unless the user specifies otherwise.
+- Prefer `svg` for version-controlled diagrams and `png` for documents, notebook display, or chat previews unless the user specifies otherwise.
+- Treat notebook `rendered_diagrams/` directories as generated output unless the repo intentionally keeps a small example artifact.
 
 ## Resources
 
-- `scripts/check_skills_env.py`: verify Python, `diagrams`, and Graphviz `dot`.
-- `scripts/list_skills_nodes.py`: list node classes from the installed `skills` package.
+- `scripts/check_diagrams_env.py`: verify Python, `diagrams`, and Graphviz `dot`.
+- `scripts/list_diagrams_nodes.py`: list node classes from the installed `diagrams` package.
 - `references/library-guide.md`: detailed patterns, provider notes, examples, and troubleshooting.
+- `references/marimo-auto-render.md`: direct-import marimo rendering pattern.

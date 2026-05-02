@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check whether the local environment can render skills."""
+"""Check whether the local environment can render diagrams."""
 
 from __future__ import annotations
 
@@ -17,19 +17,23 @@ def _print_status(label: str, ok: bool, detail: str) -> None:
 
 def _check_diagrams() -> bool:
     try:
-        version = importlib.metadata.version("skills")
+        version = importlib.metadata.version("diagrams")
     except importlib.metadata.PackageNotFoundError:
-        _print_status("skills package", False, "install with `pip install diagrams`")
+        _print_status("diagrams package", False, "install with `pip install diagrams`")
         return False
 
-    _print_status("skills package", True, version)
+    _print_status("diagrams package", True, version)
     return True
 
 
 def _check_graphviz() -> bool:
     dot = shutil.which("dot")
     if dot is None:
-        _print_status("Graphviz dot", False, "install Graphviz and ensure `dot` is on PATH")
+        _print_status(
+            "Graphviz dot",
+            False,
+            "install Graphviz and ensure `dot` is on PATH",
+        )
         return False
 
     try:
@@ -57,7 +61,7 @@ def main() -> int:
         print("\nRendering will fail until the missing dependency is available.")
         return 1
 
-    print("\nEnvironment is ready to render skills.")
+    print("\nEnvironment is ready to render diagrams.")
     return 0
 
 

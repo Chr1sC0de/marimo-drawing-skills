@@ -26,7 +26,7 @@ def _():
         diagram_output_dir / "customer_api_diagram"
     )
 
-    return customer_api_diagram_path
+    return (customer_api_diagram_path,)
 
 
 @app.cell

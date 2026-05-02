@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""List node classes available in the installed skills package."""
+"""List node classes available in the installed diagrams package."""
 
 from __future__ import annotations
 
@@ -22,16 +22,22 @@ class NodeClass:
 
 def _load_diagrams():
     try:
-        skills = importlib.import_module("diagrams")
-        node = getattr(skills, "Node")
+        diagrams = importlib.import_module("diagrams")
+        node = getattr(diagrams, "Node")
     except ModuleNotFoundError:
-        print("The `skills` package is not installed. Install it with `pip install diagrams`.", file=sys.stderr)
+        print(
+            "The `diagrams` package is not installed. Install it with `pip install diagrams`.",
+            file=sys.stderr,
+        )
         raise SystemExit(2)
     except AttributeError:
-        print("The installed `skills` package does not expose `Node` as expected.", file=sys.stderr)
+        print(
+            "The installed `diagrams` package does not expose `Node` as expected.",
+            file=sys.stderr,
+        )
         raise SystemExit(2)
 
-    return skills, node
+    return diagrams, node
 
 
 def _iter_modules(package_name: str) -> Iterable[str]:
@@ -49,12 +55,12 @@ def _iter_modules(package_name: str) -> Iterable[str]:
 
 def _iter_node_classes(provider: str | None) -> Iterable[NodeClass]:
     _, base_node = _load_diagrams()
-    root = f"skills.{provider}" if provider else "diagrams"
+    root = f"diagrams.{provider}" if provider else "diagrams"
 
     try:
         module_names = _iter_modules(root)
     except ModuleNotFoundError:
-        print(f"No skills provider named `{provider}` is installed.", file=sys.stderr)
+        print(f"No diagrams provider named `{provider}` is installed.", file=sys.stderr)
         raise SystemExit(2)
 
     for module_name in module_names:
@@ -96,9 +102,18 @@ def _matches(node_class: NodeClass, category: str | None, query: str | None) -> 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--provider", help="Provider namespace, such as aws, gcp, k8s, onprem, generic, or saas.")
-    parser.add_argument("--category", help="Category under the provider, such as compute, database, network, or storage.")
-    parser.add_argument("--query", help="Case-insensitive search term for class name or module path.")
+    parser.add_argument(
+        "--provider",
+        help="Provider namespace, such as aws, gcp, k8s, onprem, generic, or saas.",
+    )
+    parser.add_argument(
+        "--category",
+        help="Category under the provider, such as compute, database, network, or storage.",
+    )
+    parser.add_argument(
+        "--query",
+        help="Case-insensitive search term for class name or module path.",
+    )
     parser.add_argument("--limit", type=int, default=200, help="Maximum rows to print.")
     args = parser.parse_args()
 
