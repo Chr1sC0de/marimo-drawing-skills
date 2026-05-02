@@ -4,14 +4,11 @@ __generated_with = "0.23.4"
 app = marimo.App(width="medium")
 
 with app.setup:
-    import sys
     from pathlib import Path
 
     import marimo as mo
 
     notebook_dir = Path(__file__).parent
-    if str(notebook_dir) not in sys.path:
-        sys.path.insert(0, str(notebook_dir))
 
     from diagram_code import customer_api_diagram
 

@@ -96,15 +96,11 @@ __generated_with = "0.23.4"
 app = marimo.App(width="medium")
 
 with app.setup:
-    import sys
     from pathlib import Path
 
     import marimo as mo
 
     notebook_dir = Path(__file__).parent
-    if str(notebook_dir) not in sys.path:
-        sys.path.insert(0, str(notebook_dir))
-
     from drawing_code import cairo_interface
 
     drawing_output_dir = notebook_dir / "rendered_diagrams"
@@ -140,6 +136,11 @@ if __name__ == "__main__":
 - Treat pycairo PNGs as rendered artifacts, not source.
 - Pass an extensionless output stem such as `drawing_output_dir / "pycairo_interface"`.
 - Do not pass a `.png` path; the draw function appends the extension from `outformat`.
+- Prepend the notebook module directory from the CLI before running or exporting marimo notebooks:
+
+```bash
+PYTHONPATH="$PWD/notebooks:$PYTHONPATH" marimo run notebooks/slide_3.py
+```
 
 ## Sources
 

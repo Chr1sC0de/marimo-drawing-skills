@@ -44,6 +44,10 @@ _Avoid_: build_diagram, render helper
 A marimo auto-rendering pattern where a notebook imports a diagram module and calls its build_diagram function directly.
 _Avoid_: subprocess rendering, shell rendering
 
+**CLI import path setup**:
+A verification and execution convention where the agent prepends notebook module directories to `PYTHONPATH` before running marimo.
+_Avoid_: notebook sys.path mutation
+
 **marimo reference**:
 The Diagrams skill reference document that explains direct import rendering for marimo notebooks.
 _Avoid_: separate marimo skill
@@ -76,6 +80,7 @@ _Avoid_: install notes only
 - A **diagram module** exposes a **build_diagram function** for marimo notebooks to call.
 - A pycairo drawing module exposes a **draw_surface function** for marimo notebooks to call.
 - **direct import rendering** is the default pattern for **marimo auto-rendering**.
+- **CLI import path setup** keeps marimo notebooks focused on rendering rather than import bootstrapping.
 - The **marimo reference** extends the **Diagrams skill** rather than creating a separate skill.
 - The **pycairo marimo slide** demonstrates the **custom drawing path** by running pycairo code.
 - The **pycairo marimo slide** produces a **pycairo artifact** by default.
@@ -100,6 +105,9 @@ _Avoid_: install notes only
 
 > **Dev:** "Should the notebook shell out to render the diagram?"
 > **Domain expert:** "No. Use direct import rendering unless the diagram script specifically needs subprocess isolation."
+
+> **Dev:** "Should a marimo notebook mutate `sys.path` so local modules import?"
+> **Domain expert:** "No. The agent should prepend the notebook module directory to `PYTHONPATH` from the CLI before running or exporting."
 
 > **Dev:** "Should marimo rendering be its own Codex skill?"
 > **Domain expert:** "No. Add a marimo reference to the existing Diagrams skill because it is a usage pattern for diagrams."

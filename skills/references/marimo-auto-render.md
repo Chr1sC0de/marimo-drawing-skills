@@ -78,15 +78,11 @@ __generated_with = "0.23.4"
 app = marimo.App(width="medium")
 
 with app.setup:
-    import sys
     from pathlib import Path
 
     import marimo as mo
 
     notebook_dir = Path(__file__).parent
-    if str(notebook_dir) not in sys.path:
-        sys.path.insert(0, str(notebook_dir))
-
     from diagram_code import customer_api_diagram
 
     diagram_output_dir = notebook_dir / "rendered_diagrams"
@@ -132,13 +128,13 @@ if __name__ == "__main__":
 Render outside marimo first when debugging:
 
 ```bash
-python -c "from notebooks.diagram_code.customer_api_diagram import build_diagram; print(build_diagram('/tmp/customer_api_diagram'))"
+PYTHONPATH="$PWD/notebooks:$PYTHONPATH" python -c "from diagram_code.customer_api_diagram import build_diagram; print(build_diagram('/tmp/customer_api_diagram'))"
 ```
 
-Then run the notebook:
+Then run the notebook with the notebook module directory prepended:
 
 ```bash
-marimo run notebooks/slide_2.py
+PYTHONPATH="$PWD/notebooks:$PYTHONPATH" marimo run notebooks/slide_2.py
 ```
 
 If rendering fails, check Graphviz and the `diagrams` package with:
