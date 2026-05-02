@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check whether the local environment can render diagrams."""
+"""Check whether the local environment can render skills."""
 
 from __future__ import annotations
 
@@ -17,12 +17,12 @@ def _print_status(label: str, ok: bool, detail: str) -> None:
 
 def _check_diagrams() -> bool:
     try:
-        version = importlib.metadata.version("diagrams")
+        version = importlib.metadata.version("skills")
     except importlib.metadata.PackageNotFoundError:
-        _print_status("diagrams package", False, "install with `pip install diagrams`")
+        _print_status("skills package", False, "install with `pip install diagrams`")
         return False
 
-    _print_status("diagrams package", True, version)
+    _print_status("skills package", True, version)
     return True
 
 
@@ -57,7 +57,7 @@ def main() -> int:
         print("\nRendering will fail until the missing dependency is available.")
         return 1
 
-    print("\nEnvironment is ready to render diagrams.")
+    print("\nEnvironment is ready to render skills.")
     return 0
 
 

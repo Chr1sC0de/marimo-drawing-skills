@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""List node classes available in the installed diagrams package."""
+"""List node classes available in the installed skills package."""
 
 from __future__ import annotations
 
@@ -22,16 +22,16 @@ class NodeClass:
 
 def _load_diagrams():
     try:
-        diagrams = importlib.import_module("diagrams")
-        node = getattr(diagrams, "Node")
+        skills = importlib.import_module("diagrams")
+        node = getattr(skills, "Node")
     except ModuleNotFoundError:
-        print("The `diagrams` package is not installed. Install it with `pip install diagrams`.", file=sys.stderr)
+        print("The `skills` package is not installed. Install it with `pip install diagrams`.", file=sys.stderr)
         raise SystemExit(2)
     except AttributeError:
-        print("The installed `diagrams` package does not expose `Node` as expected.", file=sys.stderr)
+        print("The installed `skills` package does not expose `Node` as expected.", file=sys.stderr)
         raise SystemExit(2)
 
-    return diagrams, node
+    return skills, node
 
 
 def _iter_modules(package_name: str) -> Iterable[str]:
@@ -49,12 +49,12 @@ def _iter_modules(package_name: str) -> Iterable[str]:
 
 def _iter_node_classes(provider: str | None) -> Iterable[NodeClass]:
     _, base_node = _load_diagrams()
-    root = f"diagrams.{provider}" if provider else "diagrams"
+    root = f"skills.{provider}" if provider else "diagrams"
 
     try:
         module_names = _iter_modules(root)
     except ModuleNotFoundError:
-        print(f"No diagrams provider named `{provider}` is installed.", file=sys.stderr)
+        print(f"No skills provider named `{provider}` is installed.", file=sys.stderr)
         raise SystemExit(2)
 
     for module_name in module_names:
