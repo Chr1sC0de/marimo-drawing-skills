@@ -4,7 +4,16 @@ __generated_with = "0.23.4"
 app = marimo.App(width="full")
 
 with app.setup:
-    from notebooks import slide_1, slide_2
+    import sys
+    from pathlib import Path
+
+    notebook_dir = Path(__file__).parent
+    if str(notebook_dir) not in sys.path:
+        sys.path.insert(0, str(notebook_dir))
+
+    import slide_1
+    import slide_2
+    import slide_3
 
     async def render_slide(module):
         _results = await module.app.embed()
@@ -20,6 +29,12 @@ async def _():
 @app.cell
 async def _():
     await render_slide(slide_2)
+    return
+
+
+@app.cell
+async def _():
+    await render_slide(slide_3)
     return
 
 

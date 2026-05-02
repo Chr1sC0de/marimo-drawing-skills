@@ -2,4 +2,5 @@
 !.gitignore
 !.vscode
 __pycache__
+notebooks/__marimo__/
 notebooks/rendered_diagrams/

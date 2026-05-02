@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from notebooks.diagram_code import customer_api_diagram
+from . import customer_api_diagram
 
 DIAGRAM_CODE_DIR = Path(__file__).resolve().parent
 NOTEBOOK_DIR = DIAGRAM_CODE_DIR.parent
