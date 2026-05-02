@@ -4,6 +4,8 @@ import math
 from pathlib import Path, PurePath
 
 Color = tuple[float, float, float]
+DESIGN_WIDTH = 16.0
+DESIGN_HEIGHT = 9.0
 
 
 def draw_surface(
@@ -35,14 +37,101 @@ def draw_surface(
     output_path = output_stem_path.with_suffix(f".{outformat}")
 
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
-    context = cairo.Context(surface)
-    context.scale(width, height)
+    cairo_context = cairo.Context(surface)
+    scale = min(width / DESIGN_WIDTH, height / DESIGN_HEIGHT)
+    cairo_context.translate(
+        (width - DESIGN_WIDTH * scale) / 2,
+        (height - DESIGN_HEIGHT * scale) / 2,
+    )
+    cairo_context.scale(scale, scale)
+    context = _NormalizedContext(cairo_context)
 
     _draw_interface(cairo, context)
 
     surface.write_to_png(str(output_path))
     surface.finish()
     return output_path
+
+
+class _NormalizedContext:
+    def __init__(
+        self,
+        context,
+        design_width: float = DESIGN_WIDTH,
+        design_height: float = DESIGN_HEIGHT,
+    ) -> None:
+        self._context = context
+        self._design_width = design_width
+        self._design_height = design_height
+
+    def __getattr__(self, name: str):
+        return getattr(self._context, name)
+
+    def map_x(self, x: float) -> float:
+        return x * self._design_width
+
+    def map_y(self, y: float) -> float:
+        return y * self._design_height
+
+    def map_length(self, value: float) -> float:
+        return value * self._design_height
+
+    def x_radius(self, radius: float) -> float:
+        return radius * self._design_height / self._design_width
+
+    def move_to(self, x: float, y: float) -> None:
+        self._context.move_to(self.map_x(x), self.map_y(y))
+
+    def line_to(self, x: float, y: float) -> None:
+        self._context.line_to(self.map_x(x), self.map_y(y))
+
+    def curve_to(
+        self,
+        x1: float,
+        y1: float,
+        x2: float,
+        y2: float,
+        x3: float,
+        y3: float,
+    ) -> None:
+        self._context.curve_to(
+            self.map_x(x1),
+            self.map_y(y1),
+            self.map_x(x2),
+            self.map_y(y2),
+            self.map_x(x3),
+            self.map_y(y3),
+        )
+
+    def arc(
+        self,
+        x: float,
+        y: float,
+        radius: float,
+        angle1: float,
+        angle2: float,
+    ) -> None:
+        self._context.arc(
+            self.map_x(x),
+            self.map_y(y),
+            self.map_length(radius),
+            angle1,
+            angle2,
+        )
+
+    def set_line_width(self, width: float) -> None:
+        self._context.set_line_width(self.map_length(width))
+
+    def set_font_size(self, size: float) -> None:
+        self._context.set_font_size(self.map_length(size))
+
+    def linear_gradient(self, cairo, x0: float, y0: float, x1: float, y1: float):
+        return cairo.LinearGradient(
+            self.map_x(x0),
+            self.map_y(y0),
+            self.map_x(x1),
+            self.map_y(y1),
+        )
 
 
 def _draw_interface(cairo, context) -> None:
@@ -54,7 +143,7 @@ def _draw_interface(cairo, context) -> None:
 
 
 def _draw_background(cairo, context) -> None:
-    gradient = cairo.LinearGradient(0, 0, 1, 1)
+    gradient = context.linear_gradient(cairo, 0, 0, 1, 1)
     gradient.add_color_stop_rgb(0, 0.96, 0.98, 1.0)
     gradient.add_color_stop_rgb(0.55, 0.99, 0.98, 0.94)
     gradient.add_color_stop_rgb(1, 0.95, 0.97, 0.99)
@@ -144,7 +233,7 @@ def _draw_interface_card(cairo, context, x, y, w, h, title, subtitle, color) -> 
     context.set_source_rgb(1, 1, 1)
     context.fill()
 
-    accent = cairo.LinearGradient(x, y, x + w, y)
+    accent = context.linear_gradient(cairo, x, y, x + w, y)
     accent.add_color_stop_rgba(0, *color, 0.92)
     accent.add_color_stop_rgba(1, *color, 0.58)
     _rounded_rectangle(context, x, y, w, 0.035, 0.02)
@@ -195,7 +284,7 @@ def _draw_preview_card(cairo, context) -> None:
     context.move_to(0.105, 0.66)
     context.show_text("Bezier curves, control points, gradients, and overlays")
 
-    path_gradient = cairo.LinearGradient(0.13, 0.77, 0.5, 0.64)
+    path_gradient = context.linear_gradient(cairo, 0.13, 0.77, 0.5, 0.64)
     path_gradient.add_color_stop_rgb(0, 0.16, 0.36, 0.78)
     path_gradient.add_color_stop_rgb(0.5, 0.08, 0.6, 0.48)
     path_gradient.add_color_stop_rgb(1, 0.86, 0.48, 0.18)
@@ -292,9 +381,10 @@ def _rounded_rectangle(
     h: float,
     r: float,
 ) -> None:
+    rx = context.x_radius(r)
     context.new_sub_path()
-    context.arc(x + w - r, y + r, r, -math.pi / 2, 0)
-    context.arc(x + w - r, y + h - r, r, 0, math.pi / 2)
-    context.arc(x + r, y + h - r, r, math.pi / 2, math.pi)
-    context.arc(x + r, y + r, r, math.pi, 3 * math.pi / 2)
+    context.arc(x + w - rx, y + r, r, -math.pi / 2, 0)
+    context.arc(x + w - rx, y + h - r, r, 0, math.pi / 2)
+    context.arc(x + rx, y + h - r, r, math.pi / 2, math.pi)
+    context.arc(x + rx, y + r, r, math.pi, 3 * math.pi / 2)
     context.close_path()

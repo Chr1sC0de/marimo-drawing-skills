@@ -28,9 +28,10 @@ Use direct import rendering:
 2. Expose a `draw_surface(output_stem, ...) -> Path` function.
 3. Accept an extensionless output stem and default to `outformat="png"`.
 4. Draw to a `cairo.ImageSurface`.
-5. Write the PNG with `surface.write_to_png(...)`.
-6. Return the final rendered artifact path.
-7. In marimo, call `draw_surface(...)` from a cell and display the path with `mo.image`.
+5. Use an aspect-aware design coordinate system instead of `context.scale(width, height)`, which distorts circles, text, and rounded corners.
+6. Write the PNG with `surface.write_to_png(...)`.
+7. Return the final rendered artifact path.
+8. In marimo, call `draw_surface(...)` from a cell and display the path with `mo.image`.
 
 ## Drawing Module
 
@@ -41,6 +42,9 @@ import math
 from pathlib import Path
 
 import cairo
+
+DESIGN_WIDTH = 16.0
+DESIGN_HEIGHT = 9.0
 
 
 def draw_surface(
@@ -63,14 +67,19 @@ def draw_surface(
 
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
     context = cairo.Context(surface)
-    context.scale(width, height)
+    scale = min(width / DESIGN_WIDTH, height / DESIGN_HEIGHT)
+    context.translate(
+        (width - DESIGN_WIDTH * scale) / 2,
+        (height - DESIGN_HEIGHT * scale) / 2,
+    )
+    context.scale(scale, scale)
 
     context.set_source_rgb(1, 1, 1)
     context.paint()
 
-    context.set_line_width(0.01)
+    context.set_line_width(0.08)
     context.set_source_rgb(0.12, 0.16, 0.22)
-    context.arc(0.5, 0.5, 0.3, 0, 2 * math.pi)
+    context.arc(8, 4.5, 2.4, 0, 2 * math.pi)
     context.stroke()
 
     surface.write_to_png(str(output_path))
