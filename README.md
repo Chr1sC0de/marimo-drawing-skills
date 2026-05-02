@@ -1,8 +1,20 @@
 # Marimo Drawing Skill
 
-This repository contains a Codex skill for helping agents create, render, and troubleshoot drawings in marimo notebooks.
+`marimo-drawing` is an agent skill for creating, rendering, and troubleshooting drawings in marimo notebooks.
 
 Skill name: `marimo-drawing`.
+
+## Install
+
+Install the skill with the skills CLI:
+
+```bash
+npx skills@latest add Chr1sC0de/marimo-drawing-skills/skills
+```
+
+The `/skills` suffix is intentional: it points at the skill folder that contains `SKILL.md`.
+
+## What It Does
 
 The skill supports two drawing backends:
 
@@ -11,7 +23,9 @@ The skill supports two drawing backends:
 
 The common workflow is the same for both backends: put drawing code in an importable Python module, render an image artifact to a notebook-local output directory, and display the result in marimo with `mo.image`.
 
-## Repository Layout
+Agents should use this skill when a user asks to draw, render, preview, or troubleshoot visual output in a marimo notebook.
+
+## Skill Contents
 
 - `skills/SKILL.md`: main skill instructions.
 - `skills/references/marimo-auto-render.md`: `diagrams` backend pattern for marimo.
@@ -25,7 +39,7 @@ The common workflow is the same for both backends: put drawing code in an import
 - `notebooks/diagram_code/`: drawing modules for `diagrams`.
 - `notebooks/drawing_code/`: drawing modules for pycairo.
 
-## Usage
+## Local Development
 
 Install dependencies:
 
