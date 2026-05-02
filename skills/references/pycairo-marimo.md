@@ -4,6 +4,16 @@ Use this reference when a marimo notebook needs lower-level custom drawing than 
 
 `diagrams` remains the default drawing tool for architecture diagrams. Use pycairo when the user needs manual control over cairo surfaces, paths, fills, strokes, gradients, transforms, or custom composition.
 
+## Contents
+
+- Requirements
+- Recommended Shape
+- Import Setup
+- Drawing Module
+- Marimo Notebook Cells
+- Path Rules
+- Sources
+
 ## Requirements
 
 Pycairo installs as the Python module `cairo`. It also depends on the native cairo library. Building from source requires cairo headers and `pkg-config`.
@@ -32,6 +42,14 @@ Use direct import rendering:
 6. Write the PNG with `surface.write_to_png(...)`.
 7. Return the final rendered artifact path.
 8. In marimo, call `draw_surface(...)` from a cell and display the path with `mo.image`.
+
+## Import Setup
+
+Keep import setup outside the notebook. Before running, exporting, or embedding the notebook from the CLI, prepend the directory that contains notebook-local drawing packages:
+
+```bash
+PYTHONPATH="$PWD/notebooks:$PYTHONPATH"
+```
 
 ## Drawing Module
 
@@ -100,9 +118,9 @@ with app.setup:
 
     import marimo as mo
 
-    notebook_dir = Path(__file__).parent
     from drawing_code import cairo_interface
 
+    notebook_dir = Path(__file__).parent
     drawing_output_dir = notebook_dir / "rendered_diagrams"
 
 

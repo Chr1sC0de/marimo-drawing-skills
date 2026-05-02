@@ -8,10 +8,9 @@ with app.setup:
 
     import marimo as mo
 
-    notebook_dir = Path(__file__).parent
-
     from drawing_code import cairo_interface
 
+    notebook_dir = Path(__file__).parent
     drawing_output_dir = notebook_dir / "rendered_diagrams"
 
 

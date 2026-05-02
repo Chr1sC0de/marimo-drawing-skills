@@ -2,6 +2,17 @@
 
 Use this reference when creating or debugging architecture diagrams with the Python `diagrams` package from mingrammer.
 
+## Contents
+
+- Sources
+- Core Model
+- Requirements
+- Providers
+- Diagram Options
+- Patterns
+- Troubleshooting
+- Boundaries
+
 ## Sources
 
 - Official docs: https://diagrams.mingrammer.com/

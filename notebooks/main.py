@@ -4,7 +4,9 @@ __generated_with = "0.23.4"
 app = marimo.App(width="full")
 
 with app.setup:
-    from notebooks import slide_1, slide_2, slide_3
+    import slide_1
+    import slide_2
+    import slide_3
 
     async def render_slide(module):
         _results = await module.app.embed()

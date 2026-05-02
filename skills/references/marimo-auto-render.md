@@ -2,6 +2,15 @@
 
 Use this reference when a marimo notebook should render a `diagrams` diagram and display the generated image automatically.
 
+## Contents
+
+- Recommended Shape
+- Import Setup
+- Diagram Module
+- Marimo Notebook Cells
+- Path Rules
+- Verification
+
 ## Recommended Shape
 
 Use direct import rendering:
@@ -14,6 +23,14 @@ Use direct import rendering:
 6. In the marimo notebook, call `build_diagram(...)` from a cell and display the returned path with `mo.image`.
 
 Do not shell out from the notebook by default. A subprocess wrapper is only useful when a diagram script needs process isolation or has an existing CLI contract.
+
+## Import Setup
+
+Keep import setup outside the notebook. Before running, exporting, or embedding the notebook from the CLI, prepend the directory that contains notebook-local drawing packages:
+
+```bash
+PYTHONPATH="$PWD/notebooks:$PYTHONPATH"
+```
 
 ## Diagram Module
 
@@ -82,9 +99,9 @@ with app.setup:
 
     import marimo as mo
 
-    notebook_dir = Path(__file__).parent
     from diagram_code import customer_api_diagram
 
+    notebook_dir = Path(__file__).parent
     diagram_output_dir = notebook_dir / "rendered_diagrams"
 
 

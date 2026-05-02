@@ -41,13 +41,13 @@
       }
     },
     {
-      "name": "Marimo: edit starter notebook",
+      "name": "Marimo: edit main notebook",
       "type": "debugpy",
       "request": "launch",
       "module": "marimo",
       "args": [
         "edit",
-        "${workspaceFolder}/notebooks/starter.py",
+        "${workspaceFolder}/notebooks/main.py",
         "--host",
         "127.0.0.1",
         "--skip-update-check",

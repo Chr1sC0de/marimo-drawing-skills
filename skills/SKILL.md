@@ -1,6 +1,6 @@
 ---
 name: marimo-drawing
-description: "Create, render, and troubleshoot drawings in marimo notebooks. Use when Codex needs to choose between the diagrams backend for architecture diagrams and pycairo for lower-level custom drawing, generate drawing modules, display rendered artifacts with mo.image, or verify Graphviz/pycairo rendering environments."
+description: "Create, render, and troubleshoot drawings in marimo notebooks. Use when Codex needs to make or modify marimo notebook drawings, choose between the diagrams backend for architecture diagrams and pycairo for custom drawing, generate importable drawing modules, display rendered artifacts with mo.image, or verify Graphviz/pycairo rendering environments."
 ---
 
 # Marimo Drawing
@@ -11,16 +11,23 @@ Use this skill to create drawing workflows in marimo notebooks. The notebook sho
 
 Use `diagrams` as the default backend for cloud, Kubernetes, on-prem, SaaS, C4, generic infrastructure, and programming-framework architecture diagrams. Use pycairo only when the user needs lower-level custom drawing control over paths, fills, strokes, gradients, transforms, or cairo surfaces.
 
+## Reference Selection
+
+- Architecture diagrams in marimo: read [marimo-auto-render.md](references/marimo-auto-render.md).
+- `diagrams` providers, nodes, clusters, edges, or Graphviz troubleshooting: read [library-guide.md](references/library-guide.md).
+- Custom drawing in marimo with cairo surfaces, paths, gradients, or aspect-aware geometry: read [pycairo-marimo.md](references/pycairo-marimo.md).
+
 ## Workflow
 
 1. Clarify the notebook output: drawing purpose, backend, dimensions/aspect ratio, output format, destination slide, and rendered artifact name.
-2. Choose the backend:
-   - Use `diagrams` by default for architecture diagrams.
-   - Use pycairo for custom drawing that needs manual geometry or surface-level control.
-3. Check the relevant local environment before rendering:
+2. Choose the backend. Use `diagrams` by default for architecture diagrams. Use pycairo for custom drawing that needs manual geometry or surface-level control.
+3. Check only the relevant local environment before rendering:
 
 ```bash
+# For diagrams:
 python skills/scripts/check_diagrams_env.py
+
+# For pycairo:
 python skills/scripts/check_pycairo_env.py
 ```
 
@@ -34,13 +41,13 @@ python skills/scripts/list_diagrams_nodes.py --provider k8s --category compute
 5. Put drawing construction in an importable module. Use `build_diagram(output_stem) -> Path` for diagrams and `draw_surface(output_stem) -> Path` for pycairo.
 6. Pass an extensionless output stem, create parent directories in the drawing module, and return the final rendered artifact path.
 7. Keep marimo cells focused on presentation: call the drawing module function and display the returned path with `mo.image`.
-8. Configure local imports from the CLI with `PYTHONPATH="$PWD/notebooks:$PYTHONPATH"`; do not mutate `sys.path` inside notebooks.
+8. Configure local imports from the CLI before iterating, for example `PYTHONPATH="$PWD/notebooks:$PYTHONPATH"`; do not mutate `sys.path` inside notebooks.
 9. Treat notebook `rendered_diagrams/` directories as generated output unless the repo intentionally keeps a small example artifact.
 10. Verify by rendering the drawing module directly and embedding or exporting the marimo notebook.
 
 ## Backend Patterns
 
-For architecture diagrams, read [marimo-auto-render.md](references/marimo-auto-render.md) and [library-guide.md](references/library-guide.md). Prefer readable variables and explicit imports. Assign nodes once and connect the variables; repeated constructor calls create repeated diagram nodes.
+For architecture diagrams, prefer readable variables and explicit imports. Assign nodes once and connect the variables; repeated constructor calls create repeated diagram nodes.
 
 ```python
 from diagrams import Cluster, Diagram, Edge
@@ -86,6 +93,7 @@ For custom drawing, read [pycairo-marimo.md](references/pycairo-marimo.md). Use 
 - Prefer `svg` for version-controlled architecture diagram source outputs.
 - Use pycairo as an alternative for custom drawing; do not make it the default architecture diagram path.
 - Keep notebook import setup outside the notebook. Agents should prepend module paths from the CLI before iterating.
+- Preserve the user's surrounding notebook structure. Add only the drawing cells/modules needed for the request.
 
 ## Resources
 

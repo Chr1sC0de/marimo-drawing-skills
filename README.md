@@ -2,6 +2,8 @@
 
 This repository contains a Codex skill for helping agents create, render, and troubleshoot drawings in marimo notebooks.
 
+Skill name: `marimo-drawing`.
+
 The skill supports two drawing backends:
 
 - `diagrams`: the default backend for architecture diagrams as code.
@@ -43,6 +45,8 @@ Run the example notebook with notebook-local modules on `PYTHONPATH`:
 ```bash
 PYTHONPATH="$PWD/notebooks:$PYTHONPATH" uv run marimo run notebooks/main.py
 ```
+
+When working outside this repository, replace `$PWD/notebooks` with the directory that contains the notebook-local drawing packages.
 
 Export the example notebook:
 

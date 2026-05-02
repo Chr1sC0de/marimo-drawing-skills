@@ -8,10 +8,9 @@ with app.setup:
 
     import marimo as mo
 
-    notebook_dir = Path(__file__).parent
-
     from diagram_code import customer_api_diagram
 
+    notebook_dir = Path(__file__).parent
     diagram_output_dir = notebook_dir / "rendered_diagrams"
 
 
